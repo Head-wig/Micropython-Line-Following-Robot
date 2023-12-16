@@ -5,7 +5,7 @@ The goal of this project was to create a robot on the romi platform controlled b
  - [Romi Setup](#romi-setup) 
  - [Code Structure](#code-structure)
  - [Results](#results) 
- - [Known Bugs](#known-bugs)
+ - [Potential Issues](#potential-issues)
  - [Future Work](#future-work)
  - [BOM](#billofmaterials)
 
@@ -28,7 +28,7 @@ To prepare the romi, connect wires from the four IR sensors, the motor drivers, 
 | Bread Board 3.5V Lane | 3.5V |-|-|
 | Bread Board Ground Lane |GND|-|-|
 
-Once the pins are correctly connected, install the sensor mount provided in the Models folder. As shown below this model can be connected to the romi using two M2.5 bolts and nuts. The IR sensors can then be install with one M2.5 bolts. while installing the IR sensors use the built in channel to route the connecting wires to the breadboard and Nucleo respectively. The VCC and GND pins from each sensor should connect to breadboard's 3.5V and ground lanes which can be mounted any place on the romi and secured using double sided tape. Finally,  attach the limit switch to the front of the romi with two additional M2.5 bolts. These two bolts will tap into the material of the print and therefore not need nuts. 
+Once the pins are correctly connected, install the sensor mount provided in the Models folder. As shown below this model can be connected to the romi using two M2.5 bolts and nuts. The IR sensors can then be install with one M2.5 bolt each. while installing the IR sensors use the built in channel to route the connecting wires to the breadboard and Nucleo respectively. The VCC and GND pins from each sensor should connect to breadboard's 3.5V and ground lanes which can be mounted any place on the romi and secured using double sided tape. Finally,  attach the limit switch to the front of the romi with two additional M2.5 bolts. These two bolts will tap into the material of the print and therefore not need nuts. 
 ![SensorMount](https://i.ibb.co/YbMf36C/Sensor-Mount.png)
 
 # Code Structure
@@ -45,7 +45,13 @@ When tested, romi completed the course that had been laid out for it in only one
 
 [![](https://markdown-videos-api.jorgenkh.no/youtube/NFez8l3HVpM)](https://youtu.be/NFez8l3HVpM )
 
+
+
 ![Romi1](https://i.ibb.co/MDNfNfk/IMG-5951.jpg)
+
+
+
+
 
 # Known Bugs
 This build does have a few bugs that this section hopes to address. The first issue is that the TCRT5000 IR Sensors only work on specific surfaces. If the surface is too reflective the sensors will get false readings which will lead the robot off course. Another issues with these sensors is that they can have some sort of malfunction that causes a  much longer response time. This issue comes on without warning and has no current solution. During the building and testing of this romi at least two sensors were replaced due to this issue. 
@@ -54,9 +60,24 @@ Another issues faced unrelated to the sensors was the way the Nucleo board inter
 
 # Future Work
 
- - Add a function that will allow romi to return to its starting postion 
+ - Add a function that will allow romi to return to its starting position using an IMU 
  - Increase compatibility with reflective materials
  - Add more sensors to increase consistency on dashed and curved lines
- - Smooth our turning by either introducing a turning state or by changing the way romi pivots 
+ - Smooth our turning by either introducing a turning state, changing the way romi pivots, or introducing A PID controller to our motors 
 
 # BOM
+
+| Items |Quantity  |
+|--|--|
+|Nucleo l476rg | 1 |
+|Shoe Of Brian |1
+|Romi kit|1
+|Limit Switch |1
+|Breadboard |1
+|TCRT5000 IR Sensors |4
+|Pack of assorted wires|1 
+|Pack of heat shrink | 1
+|Roll of filament |1
+|M2.5 Screws | 8
+|M2.5 Nuts | 6
+|Shoe Of Brian mounting kit | 1
