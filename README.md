@@ -5,7 +5,7 @@ The goal of this project was to create a robot on the romi platform controlled b
  - [Romi Setup](#romi-setup) 
  - [Code Structure](#code-structure)
  - [Results](#results) 
- - [Potential Issues](#potential-issues)
+ - [Known Bugs](#known-bugs)
  - [Future Work](#future-work)
  - [BOM](#billofmaterials)
 
