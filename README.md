@@ -39,9 +39,4 @@ Once the pins are correctly connected, install the sensor mount provided in the 
 
 # Code Structure
 
-
-
-Markdown 2126 bytes 344 words 38 lines Ln 33, Col 16
-HTML 1546 characters 354 words 66 paragraphs
-Menu
-Main workspace not synced.
+# BOM
