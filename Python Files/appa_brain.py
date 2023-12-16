@@ -10,9 +10,7 @@ import math
 # 30 = 
 
 class appa_brain: # Read the Sensors and assigning appropriate task
-    '''! A class implementing data collection and serial (ie vcp)
-        communication
-    '''
+
     def __init__(self, Appa_Mode, Left_Wheel_RPM, Right_Wheel_RPM, X_Distance, Y_Distance, DEBUG_VAL):
         
         self.Appa_Mode = Appa_Mode

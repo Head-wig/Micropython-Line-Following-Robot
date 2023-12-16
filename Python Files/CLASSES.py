@@ -143,8 +143,23 @@ class Encoder:
         pass
     
     
-class ClosedLoop_Left:
+class ClosedLoop:
+    '''!@brief Generalized ClosedLoop Control function
+
+    @details Objects of this class can be used as a PID controller by inputing 
+    gain values and a set value.
+    
+
+    '''
     def __init__(self, CurrentVelocity, SetVelocity, P_Gain, I_Gain, D_Gain):
+        '''!@brief Constructs an ClosedLoop object
+        @details This method initializes the class and reset all input parameters
+        @param CurrentVelocity most recent value to compare to set velocity
+        @param SetVelocity set velocity for error calculations
+        @param P_Gain sets porportianal gain constant
+        @param I_Gian sets integral gain constant
+        @param D_Gain sets derivative gain constant
+        '''
         self.CurrentVel = CurrentVelocity
         self.SetVel = SetVelocity 
         self.Gain = P_Gain, I_Gain, D_Gain
@@ -156,13 +171,31 @@ class ClosedLoop_Left:
         self.I_term = 0
         
     def updategain(self,P_Gain, I_Gain, D_Gain):
+        '''!@brief Sets new values for gains
+        @details will update P,I and D gains for Run()
+        @param P_Gain sets a new porportianal gain constant
+        @param I_Gian sets a new integral gain constant
+        @param D_Gain sets a new derivative gain constant
+        '''
         self.kp = P_Gain
         self.ki = I_Gain
         self.kd = D_Gain
     def updatevel(self,NewVel):
+        '''!@brief Updates set velocity
+        @details will update set velocity value for Run() 
+        @param NewVel set velocity for error calculations
+        '''
         self.SetVel = NewVel
     
     def Run(self, CurentVelocity):
+        '''!@brief Calculates PID equations
+        @details This function will find the current error of a system then multiply the error by the P term.
+        It will also take the integral of the error using a riemann sum and multiply the value by the I term
+        It will lastly take the derivative of the error and multiply the value  by the D term.
+        The function then sums the 3 values, saves the current error as previous error, 
+        saves the time as time previos.
+        @param CurrentVelocity velocity for error calculations
+        '''
         self.time = ticks_ms()
         self.CurrentVel = CurentVelocity
         self.error = self.SetVel - self.CurrentVel
@@ -183,62 +216,38 @@ class ClosedLoop_Left:
         elif self.NewVal < -100:
             self.NewVal = -100
             
-class ClosedLoop_Right:
-    def __init__(self, CurrentVelocity, SetVelocity, P_Gain, I_Gain, D_Gain):
-        self.CurrentVel = CurrentVelocity
-        self.SetVel = SetVelocity 
-        self.Gain = P_Gain, I_Gain, D_Gain
-        self.newval = 0 
-        self.time = 0
-        self.time_previous = 0
-        self.error = 0
-        self.error_previous = 0
-        self.I_term = 0
-        
-    def updategain(self,P_Gain, I_Gain, D_Gain):
-        self.kp = P_Gain
-        self.ki = I_Gain
-        self.kd = D_Gain
-    def updatevel(self,NewVel):
-        self.SetVel = NewVel
-    
-    def Run(self, CurentVelocity):
-        self.time = ticks_ms()
-        self.CurrentVel = CurentVelocity
-        self.error = self.SetVel - self.CurrentVel
-        self.P_term = self.kp*self.error
-        self.I_term = self.I_term + self.ki*self.error*ticks_diff(self.time,self.time_previous)
-        if abs(self.I_term) > 10:
-            if self.I_term < 0:
-                self.I_term = -10
-            else:
-                self.I_term = 10
-        self.D_term = self.kd*(self.error - self.error_previous) / (self.time-self.time_previous)
-        self.NewVal = (self.P_term + self.I_term + self.D_term)#/5.522
-        self.error_previous = self.error
-        self.time_previous = self.time
-        if self.NewVal > 100:
-            self.NewVal = 100
-        elif self.NewVal < -100:
-            self.NewVal = -100
             
 class BMO:
+    '''!@brief Interface with BN0555 over i2c
+
+    @details Objects of this class can be used to read and write data to the IMU over I2C interface, 
+    can set the mode of the IMU, Get calibration status from the IMU, Return all 22 calibration Coefficents,
+    read Euler angles and angular velocities 
+
+    '''
+    
    
     def __init__(self):
-        # Initializer that takes in a pyb.I2C object preconfigured in CONTROLLER mode
+       '''!@brief Constructs an BMO object
+       @details This method initializes the class and reset all input parameters
+       '''
         self.i2c = I2C(3, freq = 200000)
         self.BNO_Address = 40 # alternative address 0x28
         self.MODE_Addr = 61# Mode address 0x3D
         
     def Mode(self, mode):
-        # A method to change the operating mode of the IMU and parse it into its individual statuses
-        # i2c.mem_write(data, addr, memaddr, timeout = 5000, addr_size = 8 )
-
+        '''!@brief Sets mode of IMU
+        @details A method to change the operating mode of the IMU and parse it into its individual statuses
+        @param Mode a binary number that correlates to one of the IMU modes
+        '''
         # NDOF will be the one used
         self.i2c.writeto_mem(self.BNO_Address, self.MODE_Addr, bytearray([mode]))       
 
     def Get_Calibration_Status(self):
-        # A method to retrieve the calibration status byte from the IMU and parse it into its statuses
+        '''!@brief reads calibration status
+        @details A method to retrieve the calibration status byte from the IMU and parse it into its statuses
+        @return Four values between 0 and 3 that indicate calibration status
+        '''
         # For reading calibration, 0x35
         # if we read 3: fully calib, 0 = not calibrated
         self.CalibVals  = Convert_byte(self.i2c.readfrom_mem(40, 53, 1))
@@ -249,7 +258,11 @@ class BMO:
         
         return self.Systemcoef, self.Gyrocoef, self.Accelcoef, self.Magcoef
                 
-    def Get_Calibration_Coefficients(self):   
+    def Get_Calibration_Coefficients(self):  
+        '''!@brief reads calibration coefficents and returns them
+        @details  A method to retrieve the calibration coefficients from the IMU as an array of packed binary data
+        @return A binary number containing 22 calibration coeficent values
+        '''
         # A method to retrieve the calibration coefficients from the IMU as an array of packed binary data
         # self.Calib_Coef = Convert_byte(self.i2c.readfrom_mem(40, 85, 22)) # 0x55
         self.Calib_Coef = (self.i2c.readfrom_mem(40, 85, 22))
@@ -257,7 +270,10 @@ class BMO:
         return self.Calib_Coef
 
     def Read_Euler_Angles(self):   
-        # A method to read Euler angles from the IMU to use as measurements for feedback
+        '''!@brief reads Euler angles and returns them
+        @details  A method to read Euler angles from the IMU to use as measurements for feedback
+        @return X, Y, Z, and euler angles
+        '''
 
         self.Euler_x = Convert_byte(self.i2c.readfrom_mem(40, 27, 1) + self.i2c.readfrom_mem(40, 26, 1)) # read LSB and MSB (in such order)
         self.Euler_y = Convert_byte(self.i2c.readfrom_mem(40, 27, 1) + self.i2c.readfrom_mem(40, 26, 1))
@@ -267,7 +283,11 @@ class BMO:
         return self.Euler_x, self.Euler_y, self.Euler_z, self.Euler  # Return value all at once as a list
         
     def Read_Angular_Velocity(self):    
-        # A method to read angular velocity from the IMU to use as measurements for feedback
+        '''!@brief reads angular velocity and returns values
+        @detailsA method to read angular velocity from the IMU to use as measurements for feedback
+        @return X, Y, Z, gyro readings
+        '''
+        # 
 
         self.Gyro_x = Convert_byte(self.i2c.readfrom_mem(40, 21, 2) + self.i2c.readfrom_mem(40, 20, 2)) # read LSB and MSB (in such order)
         self.Gyro_y = Convert_byte(self.i2c.readfrom_mem(40, 23, 2) + self.i2c.readfrom_mem(40, 22, 2))
