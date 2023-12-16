@@ -32,25 +32,31 @@ Once the pins are correctly connected, install the sensor mount provided in the 
 ![SensorMount](https://i.ibb.co/YbMf36C/Sensor-Mount.png)
 
 # Code Structure
-As stated in the introduction, this code uses a myriad of different sensor states to determine how the robot will move. Below you can see a state transition diagram depicting the finite state machines used to model the behavior of romi. When first powered on the robot will move to the Off Mode state, as the Start_Button variable initializes as zero. Once the user button is pressed Start_Button is set to one and the code moves to Line Sensors Hub state. In this state it reads all of the sensors and compares them to each of the sensor states.  Once the corresponding sensor state is found the code will transition to either Pivot state or directly to the Set Duty Cycle state if the robot is going to continue moving forward. Once the Set Duty Cycle has completed it will return to the Button Check state and restart the process. While in the pivot state the code checks the front sensor value, if this value is equal to one, the code effectively returns to the Line Sensor hub state in order to start moving forward again. If at any point the limit switch at the front of the robot is depressed our code will stop what its doing and move to the Obstacle Maneuver state. In this state the robot will back up, turn so its parallel to the obstacle and move in an arch until its on the other side of the obstacle at which point our code will return to Button check state and subsequently the Line Sensor Hub State in order to find the line and continue on its path. 
+As stated in the introduction, this code uses a myriad of different sensor states to determine how the robot will move. Below is the state transition diagram depicting the finite state machines used to model the behavior of romi. When first powered on the robot will move to the Off Mode state, as the Start_Button variable initializes as zero. Once the user button is pressed Start_Button is set to one and the code moves to Line Sensors Hub state. In this state it reads all of the sensors and compares them to each of the sensor states.  
+
+Once the corresponding sensor state is found the code will transition to either Pivot state or directly to the Set Duty Cycle state if the robot is going to continue moving forward. Once the Set Duty Cycle has completed it will return to the Button Check state and restart the process. While in the pivot state the code checks the front sensor value, if this value is equal to one, the code effectively returns to the Line Sensor hub state in order to start moving forward again.
+
+ If at any point the limit switch at the front of the robot is depressed the code will stop what its doing and move to the Obstacle Maneuver state. In this state the robot will back up, turn so its parallel to the obstacle and move in an arch until its on the other side of the obstacle at which point the code will return to Button check state and subsequently the Line Sensor Hub State in order to find the line and continue on its path. 
 
 ![Appa FSM](https://i.ibb.co/DC4KRqK/Appa-s-FSM-drawio-1.png)
 One last function of this code is the ability to stop the romi at any point by clicking the user button which will transition the code into the Off Mode state. The only time this function will not work is during the Obstacle Maneuver state. 
 # Results
-When tested, our romi compleated the course we had laid out for it in only one minute and four seconds. Below is the video of this test. Due to time constraints the ability to return to the robots starting position, and a more complex obstacle manuever algorith were not added. 
+When tested, romi completed the course that had been laid out for it in only one minute and four seconds. Below is the video of this test.  Due to time constraints the ability to return to the robots starting position, and a more complex obstacle maneuver algorithm were not added. 
 
 [![](https://markdown-videos-api.jorgenkh.no/youtube/NFez8l3HVpM)](https://youtu.be/NFez8l3HVpM )
 
-
-
 ![Romi1](https://i.ibb.co/MDNfNfk/IMG-5951.jpg)
 
+# Known Bugs
+This build does have a few bugs that this section hopes to address. The first issue is that the TCRT5000 IR Sensors only work on specific surfaces. If the surface is too reflective the sensors will get false readings which will lead the robot off course. Another issues with these sensors is that they can have some sort of malfunction that causes a  much longer response time. This issue comes on without warning and has no current solution. During the building and testing of this romi at least two sensors were replaced due to this issue. 
 
-
-
-
-# Potential Issues
+Another issues faced unrelated to the sensors was the way the Nucleo board interacted with Mac laptops. When loading scripts onto the Nucleo the micropython installation could get corrupted, loosing all files stored on the Nucleo, and necessitating the firmware to be re-flashed 
 
 # Future Work
+
+ - Add a function that will allow romi to return to its starting postion 
+ - Increase compatibility with reflective materials
+ - Add more sensors to increase consistency on dashed and curved lines
+ - Smooth our turning by either introducing a turning state or by changing the way romi pivots 
 
 # BOM
