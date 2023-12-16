@@ -37,7 +37,16 @@ As stated in the introduction, this code uses a myriad of different sensor state
 ![Appa FSM](https://i.ibb.co/DC4KRqK/Appa-s-FSM-drawio-1.png)
 One last function of this code is the ability to stop the romi at any point by clicking the user button which will transition the code into the Off Mode state. The only time this function will not work is during the Obstacle Maneuver state. 
 # Results
+When tested, our romi compleated the course we had laid out for it in only one minute and four seconds. Below is the video of this test. Due to time constraints the ability to return to the robots starting position, and a more complex obstacle manuever algorith were not added. 
+
 [![](https://markdown-videos-api.jorgenkh.no/youtube/NFez8l3HVpM)](https://youtu.be/NFez8l3HVpM )
+
+
+
+![Romi1](https://i.ibb.co/MDNfNfk/IMG-5951.jpg)
+
+
+
 
 
 # Potential Issues
