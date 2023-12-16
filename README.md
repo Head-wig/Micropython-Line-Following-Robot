@@ -1,12 +1,3 @@
-
-Trash
-Temp
-Me 405
-Welcome file
-Me 405
-
-
-
 # Micropython Line Following Robot 
 The goal of this project was to create a robot on the romi platform controlled by a Nucleo l476rg running micropython. This was accomplished by mounting four TCRT5000 IR Sensors to the front of the romi and one limit switch in order to detect any obstacle that may be in the path of the robot.  The data from each sensor was read at a 2ms interval and was used to determine which movements to make based off of predetermined states. 
 
